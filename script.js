@@ -1,3 +1,32 @@
+const root = document.documentElement;
+const themeToggle = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('portfolio-theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+const applyTheme = (theme) => {
+  root.dataset.theme = theme;
+  const isDark = theme === 'dark';
+
+  themeToggle?.setAttribute('aria-pressed', String(isDark));
+  themeToggle?.setAttribute(
+    'aria-label',
+    isDark ? 'Switch to light mode' : 'Switch to dark mode'
+  );
+
+  const icon = themeToggle?.querySelector('.theme-icon');
+  const label = themeToggle?.querySelector('.theme-label');
+
+  if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+  if (label) label.textContent = isDark ? 'Light' : 'Dark';
+};
+
+applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+themeToggle?.addEventListener('click', () => {
+  const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('portfolio-theme', nextTheme);
+  applyTheme(nextTheme);
+});
 const menuToggle = document.querySelector('.menu-toggle');
 const navLinks = document.querySelector('.nav-links');
 const navItems = [...document.querySelectorAll('.nav-links a')];
